@@ -45,7 +45,6 @@ jobs:
       uses: actions/attest-build-provenance@v1
       with:
         subject-path: 'artifact.tar.gz'
-        subject-digest: 'sha256'
         subject-name: 'attest-test-application'
         push-to-registry: false
 
@@ -90,20 +89,18 @@ jobs:
         echo '{"app": "attest-test", "env": "test"}' > config.json
         tar -czf app-config.tar.gz config.json
 
-    - name: Attest multiple subjects
+    - name: Attest main application
       uses: actions/attest-build-provenance@v1
       with:
-        subjects: |
-          [
-            {
-              "name": "attest-test-app-main",
-              "digest": "sha256:$(sha256sum app-main.tar.gz | cut -d' ' -f1)"
-            },
-            {
-              "name": "attest-test-app-config", 
-              "digest": "sha256:$(sha256sum app-config.tar.gz | cut -d' ' -f1)"
-            }
-          ]
+        subject-path: 'app-main.tar.gz'
+        subject-name: 'attest-test-app-main'
+        push-to-registry: false
+
+    - name: Attest configuration
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-path: 'app-config.tar.gz'
+        subject-name: 'attest-test-app-config'
         push-to-registry: false
 
     - name: Summary of attestations
