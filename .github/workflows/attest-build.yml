@@ -48,6 +48,14 @@ jobs:
         subject-name: 'attest-test-application'
         push-to-registry: false
 
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-artifacts-${{ github.run_number }}
+        path: |
+          artifact.tar.gz
+        retention-days: 30
+
     - name: Verify attestation (example)
       run: |
         echo "Attestation completed for build provenance"
@@ -102,6 +110,15 @@ jobs:
         subject-path: 'app-config.tar.gz'
         subject-name: 'attest-test-app-config'
         push-to-registry: false
+
+    - name: Upload multiple build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: multi-artifacts-${{ github.run_number }}
+        path: |
+          app-main.tar.gz
+          app-config.tar.gz
+        retention-days: 30
 
     - name: Summary of attestations
       run: |
