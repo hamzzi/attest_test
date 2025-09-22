@@ -1,0 +1,114 @@
+name: Attest Build Provenance Test
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-and-attest:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run tests
+      run: npm test
+
+    - name: Build application
+      run: npm run build
+
+    - name: Generate build artifact
+      run: |
+        echo "Build completed successfully at $(date)" > dist/build-info.txt
+        echo "Commit SHA: ${{ github.sha }}" >> dist/build-info.txt
+        echo "Repository: ${{ github.repository }}" >> dist/build-info.txt
+        tar -czf artifact.tar.gz -C dist .
+
+    - name: Attest build provenance
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-path: 'artifact.tar.gz'
+        subject-digest: 'sha256'
+        subject-name: 'attest-test-application'
+        push-to-registry: false
+
+    - name: Verify attestation (example)
+      run: |
+        echo "Attestation completed for build provenance"
+        echo "Subject: attest-test-application"
+        echo "Digest: $(sha256sum artifact.tar.gz | cut -d' ' -f1)"
+        echo "Workflow: ${{ github.workflow }}"
+        echo "Run ID: ${{ github.run_id }}"
+        echo "Run Attempt: ${{ github.run_attempt }}"
+
+  build-and-attest-with-subjects:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build application
+      run: npm run build
+
+    - name: Create multiple build artifacts
+      run: |
+        # Create main application artifact
+        tar -czf app-main.tar.gz -C dist/ .
+        
+        # Create configuration artifact
+        echo '{"app": "attest-test", "env": "test"}' > config.json
+        tar -czf app-config.tar.gz config.json
+
+    - name: Attest multiple subjects
+      uses: actions/attest-build-provenance@v1
+      with:
+        subjects: |
+          [
+            {
+              "name": "attest-test-app-main",
+              "digest": "sha256:$(sha256sum app-main.tar.gz | cut -d' ' -f1)"
+            },
+            {
+              "name": "attest-test-app-config", 
+              "digest": "sha256:$(sha256sum app-config.tar.gz | cut -d' ' -f1)"
+            }
+          ]
+        push-to-registry: false
+
+    - name: Summary of attestations
+      run: |
+        echo "Multiple subjects attested successfully"
+        echo "1. attest-test-app-main"
+        echo "2. attest-test-app-config"
+        echo "Workflow Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"

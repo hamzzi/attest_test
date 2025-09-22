@@ -1,0 +1,20 @@
+{
+  "name": "attest-test-project",
+  "version": "1.0.0",
+  "description": "Test project for GitHub Actions attest-build-provenance",
+  "main": "index.js",
+  "scripts": {
+    "build": "echo 'Building project...' && mkdir -p dist && cp index.js dist/",
+    "test": "echo 'Running tests...' && node index.js",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "github-actions",
+    "attestation",
+    "provenance",
+    "slsa",
+    "sigstore"
+  ],
+  "author": "",
+  "license": "MIT"
+}

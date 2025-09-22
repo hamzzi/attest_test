@@ -1,0 +1,85 @@
+# Attestation Configuration for GitHub Actions attest-build-provenance
+# This file contains configuration for build provenance attestations
+
+attestation:
+  # General attestation settings
+  issuer: "https://token.actions.githubusercontent.com"
+  
+  # Build type definition
+  build_type: "https://slsa.dev/provenance/v1"
+  
+  # Predicate configuration
+  predicate:
+    builder_type: "https://github.com/Attestations/GitHubHostedActions@v1"
+    
+  # Subject configuration
+  subject:
+    # Default digest algorithm
+    digest_algorithm: "sha256"
+    
+    # Name patterns for different artifact types
+    name_patterns:
+      application: "{repository}-{branch}-app"
+      config: "{repository}-config"
+      documentation: "{repository}-docs"
+
+# Environment-specific settings
+environments:
+  development:
+    signing_enabled: true
+    push_to_registry: false
+    retention_days: 7
+    
+  staging:
+    signing_enabled: true
+    push_to_registry: false
+    retention_days: 30
+    
+  production:
+    signing_enabled: true
+    push_to_registry: true
+    retention_days: 365
+
+# Artifact types and their attestation requirements
+artifact_types:
+  application:
+    require_build_info: true
+    require_tests: true
+    require_security_scan: false
+    
+  configuration:
+    require_build_info: false
+    require_tests: false
+    require_security_scan: true
+    
+  documentation:
+    require_build_info: false
+    require_tests: false
+    require_security_scan: false
+
+# Signing configuration
+signing:
+  # Certificate issuer configuration
+  certificate_issuer: "https://github.com/login/oauth"
+  
+  # Fulcio configuration (for Sigstore)
+  fulcio:
+    endpoint: "https://fulcio.sigstore.dev"
+    
+  # Rekor configuration (for transparency log)
+  rekor:
+    endpoint: "https://rekor.sigstore.dev"
+    enabled: true
+
+# Verification settings
+verification:
+  # Require certificate transparency
+  require_transparency: true
+  
+  # Certificate validity period (in hours)
+  certificate_validity: 24
+  
+  # Allowed issuers
+  allowed_issuers:
+    - "https://token.actions.githubusercontent.com"
+    - "https://github.com/login/oauth"
