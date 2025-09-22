@@ -9,9 +9,8 @@ This project is a sample project for testing the `attest-build-provenance` actio
 ├── package.json              # Node.js project configuration
 ├── index.js                  # Main application code
 ├── .github/
-│   ├── workflows/
-│   │   └── attest-build.yml  # GitHub Actions workflow
-│   └── attest-config.yml     # Attestation configuration file
+│   └── workflows/
+│       └── attest-build.yml  # GitHub Actions workflow
 └── README.md                 # This file
 ```
 
@@ -26,9 +25,6 @@ This project is a sample project for testing the `attest-build-provenance` actio
 - Support attestation for multiple artifacts in a single workflow
 - Generate separate attestation information for each artifact
 
-### 3. Environment-Specific Configuration
-- Apply different attestation policies for development, staging, and production environments
-- Support environment-specific settings such as registry push and retention period
 
 ## Setup Instructions
 
@@ -94,18 +90,6 @@ An advanced example that generates attestation for multiple artifacts.
 1. **Multiple Artifact Generation**: Application and configuration file artifacts
 2. **Multi-Subject Attestation**: Use `subjects` parameter for attesting multiple artifacts
 3. **Summary**: Output summary of generated attestation information
-
-## Configuration File
-
-### `.github/attest-config.yml`
-
-Contains detailed settings for the attestation process:
-
-- **attestation**: Basic attestation settings
-- **environments**: Environment-specific settings
-- **artifact_types**: Requirements for each artifact type
-- **signing**: Signing settings (Fulcio, Rekor)
-- **verification**: Verification settings
 
 ## Security Considerations
 
