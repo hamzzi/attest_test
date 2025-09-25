@@ -9,7 +9,7 @@ on:
 
 jobs:
   build-and-attest:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     permissions:
       contents: read
       id-token: write
@@ -49,13 +49,13 @@ jobs:
         push-to-registry: false
         sigstore: custom
 
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: build-artifacts-${{ github.run_number }}
-        path: |
-          artifact.tar.gz
-        retention-days: 30
+    # - name: Upload build artifacts
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: build-artifacts-${{ github.run_number }}
+    #     path: |
+    #       artifact.tar.gz
+    #     retention-days: 30
 
     - name: Verify attestation (example)
       run: |
@@ -114,14 +114,14 @@ jobs:
         push-to-registry: false
         sigstore: custom
 
-    - name: Upload multiple build artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: multi-artifacts-${{ github.run_number }}
-        path: |
-          app-main.tar.gz
-          app-config.tar.gz
-        retention-days: 30
+    # - name: Upload multiple build artifacts
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: multi-artifacts-${{ github.run_number }}
+    #     path: |
+    #       app-main.tar.gz
+    #       app-config.tar.gz
+    #     retention-days: 30
 
     - name: Summary of attestations
       run: |
