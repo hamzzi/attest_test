@@ -42,7 +42,7 @@ jobs:
         tar -czf artifact.tar.gz -C dist .
 
     - name: Attest build provenance
-      uses: hamzzi/attest-build-provenance@custom
+      uses: hamzzi/attest-build-provenance@self-hosted
       with:
         subject-path: 'artifact.tar.gz'
         subject-name: 'attest-test-application'
@@ -98,14 +98,14 @@ jobs:
         tar -czf app-config.tar.gz config.json
 
     - name: Attest main application
-      uses: hamzzi/attest-build-provenance@custom
+      uses: hamzzi/attest-build-provenance@self-hosted
       with:
         subject-path: 'app-main.tar.gz'
         subject-name: 'attest-test-app-main'
         push-to-registry: false
 
     - name: Attest configuration
-      uses: hamzzi/attest-build-provenance@custom
+      uses: hamzzi/attest-build-provenance@self-hosted
       with:
         subject-path: 'app-config.tar.gz'
         subject-name: 'attest-test-app-config'
