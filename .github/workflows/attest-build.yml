@@ -47,7 +47,6 @@ jobs:
         subject-path: 'artifact.tar.gz'
         subject-name: 'attest-test-application'
         push-to-registry: false
-        sigstore: custom
 
     # - name: Upload build artifacts
     #   uses: actions/upload-artifact@v4
@@ -104,7 +103,6 @@ jobs:
         subject-path: 'app-main.tar.gz'
         subject-name: 'attest-test-app-main'
         push-to-registry: false
-        sigstore: custom
 
     - name: Attest configuration
       uses: hamzzi/attest-build-provenance@custom
@@ -112,7 +110,6 @@ jobs:
         subject-path: 'app-config.tar.gz'
         subject-name: 'attest-test-app-config'
         push-to-registry: false
-        sigstore: custom
 
     # - name: Upload multiple build artifacts
     #   uses: actions/upload-artifact@v4
